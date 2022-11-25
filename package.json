@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/jeromealmir/tinyapp/issues"
   },
-  "homepage": "https://github.com/jeromealmir/tinyapp#readme"
+  "homepage": "https://github.com/jeromealmir/tinyapp#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }
