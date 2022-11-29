@@ -25,7 +25,7 @@ app.post('/urls', (req, res) => {
   // console.log(req.body.longURL);
   const randomKey = generateRandomString();
   urlDatabase[randomKey] = req.body.longURL;
-  console.log(urlDatabase);
+  // console.log(urlDatabase);
   res.redirect(`/urls/${randomKey}`);
 });
 
@@ -35,6 +35,12 @@ app.get('/urls/new', (req, res) => {
 
 app.get('/urls.json', (req, res) => {
   res.json(urlDatabase);
+});
+
+app.get('/u/:id', (req, res) => {
+  const longURL = urlDatabase[req.params.id];
+  // console.log(longURL);
+  res.redirect(longURL);
 });
 
 app.get('/urls/:id', (req, res) => {
