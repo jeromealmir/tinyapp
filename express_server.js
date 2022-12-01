@@ -57,7 +57,7 @@ app.post('/urls/:id', (req, res) => {
   const urlShortID = req.params.id;
   console.log(req.body);
   urlDatabase[urlShortID] = req.body.editLongURL;
-  console.log(urlDatabase)
+  console.log(urlDatabase);
   res.redirect(`/urls`);
 });
 
