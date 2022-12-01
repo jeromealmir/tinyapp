@@ -22,10 +22,15 @@ app.get('/urls', (req, res) => {
 });
 
 app.post('/urls', (req, res) => {
-  // console.log(req.body.longURL);
+  console.log(req.body.longURL);
   const randomKey = generateRandomString();
-  urlDatabase[randomKey] = req.body.longURL;
-  // console.log(urlDatabase);
+  //append http:// to URL if it is not included
+  if (!req.body.longURL.includes('http://')) {
+    urlDatabase[randomKey] = `http://${req.body.longURL}`;
+  } else {
+    urlDatabase[randomKey] = req.body.longURL;
+  }
+  console.log(urlDatabase);
   res.redirect(`/urls/${randomKey}`);
 });
 
@@ -48,10 +53,18 @@ app.get('/urls/:id', (req, res) => {
   res.render('urls_show', templateVars);
 });
 
+app.post('/urls/:id', (req, res) => {
+  const urlShortID = req.params.id;
+  console.log(req.body);
+  urlDatabase[urlShortID] = req.body.editLongURL;
+  console.log(urlDatabase)
+  res.redirect(`/urls`);
+});
+
 app.post('/urls/:id/delete', (req, res) => {
   const urlShortID = req.params.id;
   delete urlDatabase[urlShortID];
-  console.log(urlDatabase);
+  // console.log(urlDatabase);
   res.redirect(`/urls`);
 });
 
