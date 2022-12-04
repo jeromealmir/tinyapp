@@ -88,6 +88,18 @@ app.get('/register', (req, res) => {
   res.render('urls_register', templateVars);
 });
 
+app.post('/register', (req, res) => {
+  const randomKey = generateRandomString();
+  users[randomKey] = {
+    id: randomKey,
+    email: req.body.email,
+    password: req.body.password
+  };
+  res.cookie('user_id', randomKey);
+  console.log(users);
+  res.redirect(`/urls`);
+});
+
 app.post('/login', (req, res) => {
   // console.log(req.body);
   res.cookie('username', req.body.username);
