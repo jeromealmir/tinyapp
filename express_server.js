@@ -72,18 +72,18 @@ app.post('/urls/:id/delete', (req, res) => {
 
 app.get('/register', (req, res) => {
   const templateVars = { username: req.cookies.username };
-  res.render('urls_register', templateVars)
-})
+  res.render('urls_register', templateVars);
+});
 
 app.post('/login', (req, res) => {
   // console.log(req.body);
-  res.cookie('username', req.body.username)
+  res.cookie('username', req.body.username);
   res.redirect(`/urls`);
 });
 
 app.post('/logout', (req, res) => {
   // console.log(req.body);
-  res.clearCookie('username')
+  res.clearCookie('username');
   res.redirect(`/urls`);
 });
 
