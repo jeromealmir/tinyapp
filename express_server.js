@@ -70,6 +70,11 @@ app.post('/urls/:id/delete', (req, res) => {
   res.redirect(`/urls`);
 });
 
+app.get('/register', (req, res) => {
+  const templateVars = { username: req.cookies.username };
+  res.render('urls_register', templateVars)
+})
+
 app.post('/login', (req, res) => {
   // console.log(req.body);
   res.cookie('username', req.body.username)
