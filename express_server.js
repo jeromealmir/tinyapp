@@ -126,7 +126,8 @@ app.post('/login', (req, res) => {
 
   const userID = getUserByEmail(req.body.email);
 
-  if (!userID) return res.sendStatus(400); // res.send('Email does not exist. Please register!')
+  //return 403 if email does not exist or email/password is incorrect
+  if (!userID || users[userID]['password'] !== req.body.password) return res.sendStatus(403); // res.send('Email does not exist. Please register!')
 
   res.cookie('user_id', userID);
   res.redirect(`/urls`);
@@ -135,7 +136,7 @@ app.post('/login', (req, res) => {
 app.post('/logout', (req, res) => {
   // console.log(req.body);
   res.clearCookie('user_id');
-  res.redirect(`/urls`);
+  res.redirect(`/login`);
 });
 
 app.listen(PORT, () => {
