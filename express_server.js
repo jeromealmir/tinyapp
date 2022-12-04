@@ -37,15 +37,17 @@ app.get('/urls', (req, res) => {
 });
 
 app.post('/urls', (req, res) => {
-  console.log(req.body.longURL);
+  // console.log(req.body.longURL);
   const randomKey = generateRandomString();
+
   //append http:// to URL if it is not included
   if (!req.body.longURL.includes('http://')) {
     urlDatabase[randomKey] = `http://${req.body.longURL}`;
   } else {
     urlDatabase[randomKey] = req.body.longURL;
   }
-  console.log(urlDatabase);
+
+  // console.log(urlDatabase);
   res.redirect(`/urls/${randomKey}`);
 });
 
@@ -70,9 +72,9 @@ app.get('/urls/:id', (req, res) => {
 
 app.post('/urls/:id', (req, res) => {
   const urlShortID = req.params.id;
-  console.log(req.body);
+  // console.log(req.body);
   urlDatabase[urlShortID] = req.body.editLongURL;
-  console.log(urlDatabase);
+  // console.log(urlDatabase);
   res.redirect(`/urls`);
 });
 
@@ -105,8 +107,8 @@ app.post('/login', (req, res) => {
 
   //finds userID from users object using the email provided
   const getUserID = Object.keys(users).find(user => {
-    if (users[user]['email'] === req.body.email) return users[user]['id']; 
-  })
+    if (users[user]['email'] === req.body.email) return users[user]['id'];
+  });
 
   //if getUserID returns undefined set user_id to null
   res.cookie('user_id', getUserID ? getUserID : undefined);
