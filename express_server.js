@@ -116,16 +116,19 @@ app.post('/register', (req, res) => {
   res.redirect(`/urls`);
 });
 
+app.get('/login', (req, res) => {
+  const templateVars = {user: users[req.cookies.user_id] };
+  res.render('urls_login', templateVars);
+});
+
 app.post('/login', (req, res) => {
   // console.log(req.body);
 
-  //finds userID from users object using the email provided
-  const getUserID = Object.keys(users).find(user => {
-    if (users[user]['email'] === req.body.email) return users[user]['id'];
-  });
+  const userID = getUserByEmail(req.body.email);
 
-  //if getUserID returns undefined set user_id to null
-  res.cookie('user_id', getUserID ? getUserID : undefined);
+  if (!userID) return res.sendStatus(400); // res.send('Email does not exist. Please register!')
+
+  res.cookie('user_id', userID);
   res.redirect(`/urls`);
 });
 
