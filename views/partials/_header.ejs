@@ -24,14 +24,12 @@
         <button type="submit" class="btn btn-info">Logout</button>
       </form>
     <% } else { %>
-      <div class="d-flex flex-row">
-      <form class="form-inline pr-1" action="/login" method="GET">
-        <button type="submit" class="btn btn-primary">Login</button>
-      </form>
-      <form class="form-inline pl-1" action="/register" method="GET">
-        <button type="submit" class="btn btn-primary">Register</button>
-      </form>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-item nav-link" href="/login">Login</a>
+          <a class="nav-item nav-link" href="/register">Register</a>
       </div>
+    </div>
     <% } %>
   </nav>
 </header>
