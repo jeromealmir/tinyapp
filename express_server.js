@@ -40,17 +40,15 @@ app.get('/urls', (req, res) => {
 });
 
 app.post('/urls', (req, res) => {
-  // console.log(req.body.longURL);
   const randomKey = generateRandomString();
 
-  //append http:// to URL if it is not included
+  //append http:// to URL if it was not included
   if (!req.body.longURL.includes('http://')) {
     urlDatabase[randomKey] = `http://${req.body.longURL}`;
   } else {
     urlDatabase[randomKey] = req.body.longURL;
   }
 
-  // console.log(urlDatabase);
   res.redirect(`/urls/${randomKey}`);
 });
 
@@ -59,13 +57,8 @@ app.get('/urls/new', (req, res) => {
   res.render('urls_new', templateVars);
 });
 
-app.get('/urls.json', (req, res) => {
-  res.json(urlDatabase);
-});
-
 app.get('/u/:id', (req, res) => {
   const longURL = urlDatabase[req.params.id];
-  // console.log(longURL);
   res.redirect(longURL);
 });
 
@@ -74,18 +67,16 @@ app.get('/urls/:id', (req, res) => {
   res.render('urls_show', templateVars);
 });
 
-app.post('/urls/:id', (req, res) => {
-  const urlShortID = req.params.id;
-  // console.log(req.body);
-  urlDatabase[urlShortID] = req.body.editLongURL;
-  // console.log(urlDatabase);
-  res.redirect(`/urls`);
-});
-
 app.post('/urls/:id/delete', (req, res) => {
   const urlShortID = req.params.id;
   delete urlDatabase[urlShortID];
-  // console.log(urlDatabase);
+  res.redirect(`/urls`);
+});
+
+app.post('/urls/:id', (req, res) => {
+  const urlShortID = req.params.id;
+  //add new URL to database
+  urlDatabase[urlShortID] = req.body.editLongURL;
   res.redirect(`/urls`);
 });
 
@@ -98,13 +89,12 @@ app.post('/register', (req, res) => {
   const randomKey = generateRandomString();
 
   //return a 400 status code if email and/or password is empty
-  if (req.body.email === '' || req.body.password === '') return res.sendStatus(400); //res.send('Cannot proceed with empty email/password')
+  if (req.body.email === '' || req.body.password === '') return res.sendStatus(400);
   
   const userID = getUserByEmail(req.body.email);
 
   // //return a 400 status code if email is already existing
-  if (userID && users[userID]['email'] === req.body.email) return res.sendStatus(400); //res.send('Email is already registered!')
-
+  if (userID && users[userID]['email'] === req.body.email) return res.sendStatus(400);
   //add new user information to users object if there is no error
   users[randomKey] = {
     id: randomKey,
@@ -113,7 +103,6 @@ app.post('/register', (req, res) => {
   };
 
   res.cookie('user_id', randomKey);
-  // console.log(users);
   res.redirect(`/urls`);
 });
 
@@ -123,19 +112,16 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-  // console.log(req.body);
-
   const userID = getUserByEmail(req.body.email);
 
   //return 403 if email does not exist or email/password is incorrect
-  if (!userID || users[userID]['password'] !== req.body.password) return res.sendStatus(403); // res.send('Email does not exist. Please register!')
+  if (!userID || users[userID]['password'] !== req.body.password) return res.sendStatus(403);
 
   res.cookie('user_id', userID);
   res.redirect(`/urls`);
 });
 
 app.post('/logout', (req, res) => {
-  // console.log(req.body);
   res.clearCookie('user_id');
   res.redirect(`/login`);
 });
