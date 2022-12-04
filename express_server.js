@@ -92,6 +92,16 @@ app.get('/register', (req, res) => {
 
 app.post('/register', (req, res) => {
   const randomKey = generateRandomString();
+
+  //return a 400 status code if email and/or password is empty
+  if (req.body.email === '' || req.body.password === '') return res.sendStatus(400); //res.send('Cannot proceed with empty email/password')
+
+  //lookup users object if email is already existing. return 400 status code if true
+  const getEmails = Object.keys(users).map(user => users[user]['email']);
+  const findEmail = getEmails.find(email => email === req.body.email);
+
+  if (findEmail) return res.sendStatus(400); //res.send('Email is already registered!')
+
   users[randomKey] = {
     id: randomKey,
     email: req.body.email,
