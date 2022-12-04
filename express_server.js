@@ -27,6 +27,13 @@ const users = {
   },
 };
 
+//lookup users object and return true if email is already existing
+const getUserByEmail = (email) => {
+  const getEmails = Object.keys(users).map(user => users[user]['email']);
+  const findEmail = getEmails.find(emails => emails === email);
+  return findEmail ? true : false;
+};
+
 app.get('/', (req, res) => {
   res.send('Hello!');
 });
@@ -95,18 +102,17 @@ app.post('/register', (req, res) => {
 
   //return a 400 status code if email and/or password is empty
   if (req.body.email === '' || req.body.password === '') return res.sendStatus(400); //res.send('Cannot proceed with empty email/password')
+  
+  //return a 400 status code if email is already existing
+  if (getUserByEmail(req.body.email)) return res.sendStatus(400); //res.send('Email is already registered!')
 
-  //lookup users object if email is already existing. return 400 status code if true
-  const getEmails = Object.keys(users).map(user => users[user]['email']);
-  const findEmail = getEmails.find(email => email === req.body.email);
-
-  if (findEmail) return res.sendStatus(400); //res.send('Email is already registered!')
-
+  //add new user information to users object if there is no error
   users[randomKey] = {
     id: randomKey,
     email: req.body.email,
     password: req.body.password
   };
+
   res.cookie('user_id', randomKey);
   // console.log(users);
   res.redirect(`/urls`);
