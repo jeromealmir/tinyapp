@@ -32,7 +32,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/urls', (req, res) => {
-  const templateVars = { urls: urlDatabase, username: req.cookies.username };
+  const templateVars = { urls: urlDatabase, user: users[req.cookies.user_id] };
   res.render('urls_index', templateVars);
 });
 
@@ -64,7 +64,7 @@ app.get('/u/:id', (req, res) => {
 });
 
 app.get('/urls/:id', (req, res) => {
-  const templateVars = { id: req.params.id, longURL: urlDatabase[req.params.id], username: req.cookies.username};
+  const templateVars = { id: req.params.id, longURL: urlDatabase[req.params.id], user: users[req.cookies.user_id]};
   res.render('urls_show', templateVars);
 });
 
@@ -84,7 +84,7 @@ app.post('/urls/:id/delete', (req, res) => {
 });
 
 app.get('/register', (req, res) => {
-  const templateVars = { username: req.cookies.username };
+  const templateVars = { user: users[req.cookies.user_id] };
   res.render('urls_register', templateVars);
 });
 
@@ -96,19 +96,26 @@ app.post('/register', (req, res) => {
     password: req.body.password
   };
   res.cookie('user_id', randomKey);
-  console.log(users);
+  // console.log(users);
   res.redirect(`/urls`);
 });
 
 app.post('/login', (req, res) => {
   // console.log(req.body);
-  res.cookie('username', req.body.username);
+
+  //finds userID from users object using the email provided
+  const getUserID = Object.keys(users).find(user => {
+    if (users[user]['email'] === req.body.email) return users[user]['id']; 
+  })
+
+  //if getUserID returns undefined set user_id to null
+  res.cookie('user_id', getUserID ? getUserID : undefined);
   res.redirect(`/urls`);
 });
 
 app.post('/logout', (req, res) => {
   // console.log(req.body);
-  res.clearCookie('username');
+  res.clearCookie('user_id');
   res.redirect(`/urls`);
 });
 
