@@ -153,7 +153,7 @@ app.get('/login', (req, res) => {
 
   const userID = users[req.cookies.user_id];
 
-  const templateVars = { user: userID };
+  const templateVars = { user: userID, prompt: '' };
   res.render('urls_login', templateVars);
 });
 
