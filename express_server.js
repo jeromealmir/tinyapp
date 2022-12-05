@@ -56,7 +56,7 @@ app.get('/urls', (req, res) => {
   const userID = users[req.cookies.user_id];
   const templateVars = { urls: urls, user: userID, prompt: '' };
 
-  //if a user is not logged in, redirect to login page
+  //if user is not logged in, redirect to login page
   if (!req.cookies['user_id']) {
     templateVars.prompt = 'Please login to use this service!';
     return res.render('urls_login', templateVars);
@@ -66,12 +66,12 @@ app.get('/urls', (req, res) => {
 });
 
 app.post('/urls', (req, res) => {
-  //if a user is not logged in, respond with a message back to client
+  //if user is not logged in, respond with status code and error message
   if (!req.cookies['user_id']) return res.status(403).send('Please login to use this service!');
 
   const randomKey = generateRandomString();
 
-  //append http:// to URL if it was not included
+  //append http:// to URL if it was not included in the input
   if (!req.body.longURL.includes('http://')) {
     urlDatabase[randomKey] = {
       longURL: `http://${req.body.longURL}`,
@@ -91,7 +91,7 @@ app.get('/urls/new', (req, res) => {
   const userID = users[req.cookies.user_id];
   const templateVars = { user: userID, prompt: '' };
 
-  //if a user is not logged in, redirect to login page
+  //if user is not logged in, redirect to login page
   if (!req.cookies['user_id']) {
     templateVars.prompt = 'Please login to use this service!';
     return res.render('urls_login', templateVars);
@@ -102,6 +102,8 @@ app.get('/urls/new', (req, res) => {
 
 app.get('/u/:id', (req, res) => {
   const shortURL = req.params.id;
+
+  //if url id is not in database, respond with status code and error message
   if (!urlDatabase[shortURL]) return res.status(404).send('URL not found!');
 
   const longURL = urlDatabase[shortURL]['longURL'];
@@ -118,7 +120,7 @@ app.get('/urls/:id', (req, res) => {
   const userID = users[req.cookies.user_id];
   const templateVars = { id: shortURL, longURL: longURL, user: userID, prompt: '' };
 
-  //if a user is not logged in, redirect to login page
+  //if user is not logged in, redirect to login page
   if (!req.cookies['user_id']) {
     templateVars.prompt = 'Please login to modify this URL!';
     return res.render('urls_login', templateVars);
@@ -127,7 +129,6 @@ app.get('/urls/:id', (req, res) => {
   //if userid does not match URL's, redirect to login page
   if (req.cookies['user_id'] !== urlDatabase[shortURL]['userID']) return res.status(403).send('You don\'t have permission to modify this URL!  <a href="/urls">Click here to go back.</a>');
 
-  if (!longURL) return res.status(404).send('URL not found!');
 
   res.render('urls_show', templateVars);
 });
@@ -142,7 +143,7 @@ app.post('/urls/:id/delete', (req, res) => {
   if (!req.cookies['user_id']) return res.status(401).send('Please login to modify this URL!');
   
   //if user do not own the URL, respond with status code and error message
-  if (req.cookies['user_id'] !== urlDatabase[shortURL]['userID']) return res.status(403).send('You don\'t have permission to modify this URL!'); 
+  if (req.cookies['user_id'] !== urlDatabase[shortURL]['userID']) return res.status(403).send('You don\'t have permission to modify this URL!');
 
   delete urlDatabase[shortURL];
   res.redirect(`/urls`);
@@ -158,7 +159,7 @@ app.post('/urls/:id', (req, res) => {
   if (!req.cookies['user_id']) return res.status(401).send('Please login to modify this URL!');
 
   //if user do not own the URL, respond with status code and error message
-  if (req.cookies['user_id'] !== urlDatabase[shortURL]['userID']) return res.status(403).send('You don\'t have permission to modify this URL!'); 
+  if (req.cookies['user_id'] !== urlDatabase[shortURL]['userID']) return res.status(403).send('You don\'t have permission to modify this URL!');
 
   //append http:// to URL if it was not included in the input
   if (!req.body.longURL.includes('http://')) {
@@ -178,7 +179,7 @@ app.post('/urls/:id', (req, res) => {
 });
 
 app.get('/register', (req, res) => {
-  //if a user is already logged in, redirect to urls page
+  //if user is already logged in, redirect to urls page
   if (req.cookies['user_id']) return res.redirect('/urls');
 
   const userID = users[req.cookies.user_id];
@@ -191,7 +192,7 @@ app.post('/register', (req, res) => {
   const userID = users[req.cookies.user_id];
   const templateVars = { user: userID, prompt: '' };
   
-  //return a 400 status code if email and/or password is empty
+  //return 400 status code if email and/or password is empty
   if (req.body.email === '' || req.body.password === '') {
     templateVars.prompt = 'Email and/or password cannot be blank!';
     return res.status(400).render('urls_register', templateVars);
@@ -199,7 +200,7 @@ app.post('/register', (req, res) => {
 
   const uID = getUserByEmail(req.body.email);
     
-  //return a 400 status code if email is already existing
+  //return 400 status code if email already exist
   if (uID && users[uID]['email'] === req.body.email) {
     templateVars.prompt = 'Email already exist! Please login instead.';
     return res.status(400).render('urls_register', templateVars);
@@ -219,7 +220,7 @@ app.post('/register', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-  //if a user is already logged in, redirect to urls page
+  //if user is already logged in, redirect to urls page
   if (req.cookies['user_id']) return res.redirect('/urls');
 
   const userID = users[req.cookies.user_id];
@@ -232,7 +233,7 @@ app.post('/login', (req, res) => {
   const userID = users[req.cookies.user_id];
   const templateVars = { urls: urlDatabase, user: userID, prompt: '' };
   
-  //return a 400 status code if email and/or password is empty
+  //return 400 status code if email and/or password is empty
   if (req.body.email === '' || req.body.password === '') {
     templateVars.prompt = 'Email and/or password cannot be blank!';
     return res.status(400).render('urls_login', templateVars);
@@ -240,13 +241,13 @@ app.post('/login', (req, res) => {
 
   const uID = getUserByEmail(req.body.email);
 
-  //return 403 if email does not exist
+  //return 403 status code if email does not exist
   if (!uID) {
     templateVars.prompt = 'Email not found! Please register to continue.';
     return res.status(403).render('urls_login', templateVars);
   }
 
-  //return 403 if password is incorrect
+  //return 403 status code if password is incorrect
   if (users[uID]['password'] !== req.body.password) {
     templateVars.prompt = 'Incorrect login! Please try again.';
     return res.status(403).render('urls_login', templateVars);
