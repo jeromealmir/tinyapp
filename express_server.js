@@ -1,14 +1,13 @@
-const express = require('express');
 const cookieParser = require('cookie-parser');
 const bcrypt = require('bcryptjs');
+
+const express = require('express');
 const app = express();
 const PORT = 8080; // default port 8080
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
-const generateRandomString = () => Math.random().toString(36).slice(7);
 
 const urlDatabase = {
   'b2xVn2': {
@@ -35,6 +34,9 @@ const users = {
     password: "$2a$10$r44rANeJwt/PURCaYHDOhuBGh662XtGTwKyhYHQgfIZ6yjdUDyVXS",
   },
 };
+
+//randomString generator for shortURL
+const generateRandomString = () => Math.random().toString(36).slice(7);
 
 //lookup users object and return true if email is already existing
 const getUserByEmail = (email) => Object.keys(users).find(user => users[user]['email'] === email);
@@ -256,7 +258,7 @@ app.post('/login', (req, res) => {
   //use bcrypt to check password match
   if (!bcrypt.compareSync(req.body.password, users[uID]['password'])) {
     templateVars.prompt = 'Incorrect login! Please try again.';
-    
+
     //return 403 status code if password is incorrect
     return res.status(403).render('urls_login', templateVars);
   }
