@@ -72,7 +72,7 @@ app.get('/urls/new', (req, res) => {
 });
 
 app.get('/u/:id', (req, res) => {
-  const longURL = urlDatabase[req.params.id];
+  const longURL = urlDatabase[req.params.id]['longURL'];
 
   if (!longURL) return res.status(404).send('URL not found!');
 
@@ -80,7 +80,7 @@ app.get('/u/:id', (req, res) => {
 });
 
 app.get('/urls/:id', (req, res) => {
-  const longURL = urlDatabase[req.params.id];
+  const longURL = urlDatabase[req.params.id]['longURL'];
   const userID = users[req.cookies.user_id];
 
   if (!longURL) return res.status(404).send('URL not found!');
