@@ -148,8 +148,8 @@ app.get('/register', (req, res) => {
   if (req.cookies['user_id']) return res.redirect('/urls');
 
   const userID = users[req.cookies.user_id];
+  const templateVars = { user: userID, prompt: '' };
 
-  const templateVars = { user: userID };
   res.render('urls_register', templateVars);
 });
 
