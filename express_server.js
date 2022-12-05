@@ -54,9 +54,15 @@ app.post('/urls', (req, res) => {
 
   //append http:// to URL if it was not included
   if (!req.body.longURL.includes('http://')) {
-    urlDatabase[randomKey] = `http://${req.body.longURL}`;
+    urlDatabase[randomKey] = {
+      longURL: `http://${req.body.longURL}`,
+      userID: req.cookies['user_id']
+    };
   } else {
-    urlDatabase[randomKey] = req.body.longURL;
+    urlDatabase[randomKey] = {
+      longURL: req.body.longURL,
+      userID: req.cookies['user_id']
+    };
   }
 
   res.redirect(`/urls/${randomKey}`);
