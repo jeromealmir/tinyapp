@@ -135,10 +135,16 @@ app.post('/urls/:id', (req, res) => {
 
   //append http:// to URL if it was not included
   if (!req.body.longURL.includes('http://')) {
-    urlDatabase[shortURL] = `http://${req.body.longURL}`;
+    urlDatabase[shortURL] = {
+      longURL: `http://${req.body.longURL}`,
+      userID: req.cookies['user_id']
+    };
   } else {
     //add new URL to database
-    urlDatabase[shortURL] = req.body.longURL;
+    urlDatabase[shortURL] = {
+      longURL: req.body.longURL,
+      userID: req.cookies['user_id']
+    };
   }
 
   res.redirect(`/urls`);
