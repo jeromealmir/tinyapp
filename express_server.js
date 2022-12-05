@@ -186,16 +186,28 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-  const userID = getUserByEmail(req.body.email);
-
+  const userID = users[req.cookies.user_id];
+  const templateVars = { urls: urlDatabase, user: userID, prompt: '' };
+  
   //return a 400 status code if email and/or password is empty
-  if (req.body.email === '' || req.body.password === '') return res.status(400).send('Email and/or password cannot be blank! <a href="/login">Click here to go back.</a>');
+  if (req.body.email === '' || req.body.password === '') {
+    templateVars.prompt = 'Email and/or password cannot be blank!';
+    return res.status(400).render('urls_login', templateVars);
+  }
+
+  const uID = getUserByEmail(req.body.email);
 
   //return 403 if email does not exist
-  if (!userID) return res.status(403).send('Email not found! Please <a href="/register">register</a> to continue.');
+  if (!uID) {
+    templateVars.prompt = 'Email not found! Please register to continue.';
+    return res.status(403).render('urls_login', templateVars);
+  }
 
   //return 403 if password is incorrect
-  if (users[userID]['password'] !== req.body.password) return res.status(403).send('Incorrect login! <a href="/login">Please try again.</a>');
+  if (users[uID]['password'] !== req.body.password) {
+    templateVars.prompt = 'Incorrect login! Please try again.';
+    return res.status(403).render('urls_login', templateVars);
+  }
 
   res.cookie('user_id', userID);
   res.redirect(`/urls`);
