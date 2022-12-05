@@ -82,7 +82,8 @@ app.get('/urls/new', (req, res) => {
 });
 
 app.get('/u/:id', (req, res) => {
-  const longURL = urlDatabase[req.params.id]['longURL'];
+  const shortURL = req.params.id;
+  const longURL = urlDatabase[shortURL]['longURL'];
 
   if (!longURL) return res.status(404).send('URL not found!');
 
@@ -90,7 +91,8 @@ app.get('/u/:id', (req, res) => {
 });
 
 app.get('/urls/:id', (req, res) => {
-  const longURL = urlDatabase[req.params.id]['longURL'];
+  const shortURL = req.params.id;
+  const longURL = urlDatabase[shortURL]['longURL'];
   const userID = users[req.cookies.user_id];
 
   if (!longURL) return res.status(404).send('URL not found!');
@@ -103,8 +105,8 @@ app.post('/urls/:id/delete', (req, res) => {
   //if a user is not logged in, respond with a message back to client
   if (!req.cookies['user_id']) return res.status(403).send('Please login to modify this URL!');
   
-  const urlShortID = req.params.id;
-  delete urlDatabase[urlShortID];
+  const shortURL = req.params.id;
+  delete urlDatabase[shortURL]; //pending implementation!
   res.redirect(`/urls`);
 });
 
@@ -112,14 +114,14 @@ app.post('/urls/:id', (req, res) => {
   //if a user is not logged in, respond with a message back to client
   if (!req.cookies['user_id']) return res.status(403).send('Please login to modify this URL!');
 
-  const urlShortID = req.params.id;
+  const shortURL = req.params.id;
 
   //append http:// to URL if it was not included
   if (!req.body.longURL.includes('http://')) {
-    urlDatabase[urlShortID] = `http://${req.body.longURL}`;
+    urlDatabase[shortURL] = `http://${req.body.longURL}`;
   } else {
     //add new URL to database
-    urlDatabase[urlShortID] = req.body.longURL;
+    urlDatabase[shortURL] = req.body.longURL;
   }
 
   res.redirect(`/urls`);
