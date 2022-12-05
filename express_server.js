@@ -1,5 +1,6 @@
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcryptjs');
+const { getUserByEmail, generateRandomString, urlsForUser } = require('./helpers');
 
 const express = require('express');
 const app = express();
@@ -38,23 +39,6 @@ const users = {
   },
 };
 
-//randomString generator for shortURL
-const generateRandomString = () => Math.random().toString(36).slice(7);
-
-//lookup users object and return true if email is already existing
-const getUserByEmail = (email) => Object.keys(users).find(user => users[user]['email'] === email);
-
-//lookup URLs by userID
-const urlsForUser = (id) => {
-  const urlsObj = {};
-  Object.keys(urlDatabase).filter(x => {
-    if (urlDatabase[x]['userID'] === id) {
-      urlsObj[x] = {longURL: urlDatabase[x].longURL};
-    }
-  });
-  return urlsObj;
-};
-
 app.get('/', (req, res) => {
   const userID = users[req.session.user_id];
   const templateVars = {user: userID, prompt: '' };
@@ -62,7 +46,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/urls', (req, res) => {
-  const urls = urlsForUser(req.session.user_id);
+  const urls = urlsForUser(req.session.user_id, urlDatabase);
   const userID = users[req.session.user_id];
   const templateVars = { urls: urls, user: userID, prompt: '' };
 
@@ -208,7 +192,7 @@ app.post('/register', (req, res) => {
     return res.status(400).render('urls_register', templateVars);
   }
 
-  const uID = getUserByEmail(req.body.email);
+  const uID = getUserByEmail(req.body.email, users);
     
   //return 400 status code if email already exist
   if (uID && users[uID]['email'] === req.body.email) {
@@ -250,7 +234,7 @@ app.post('/login', (req, res) => {
     return res.status(400).render('urls_login', templateVars);
   }
 
-  const uID = getUserByEmail(req.body.email);
+  const uID = getUserByEmail(req.body.email, users);
 
   //return 403 status code if email does not exist
   if (!uID) {
