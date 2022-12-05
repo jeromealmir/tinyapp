@@ -95,6 +95,13 @@ app.get('/urls/:id', (req, res) => {
   const shortURL = req.params.id;
   const longURL = urlDatabase[shortURL]['longURL'];
   const userID = users[req.cookies.user_id];
+  const templateVars = { id: shortURL, longURL: longURL, user: userID, prompt: 'Please login to modify this URL!' };
+
+  //if a user is not logged in, redirect to login page
+  if (!req.cookies['user_id']) return res.render('urls_login', templateVars);
+
+  //if userid does not match URL's, redirect to login page
+  if (req.cookies['user_id'] !== urlDatabase[shortURL]['userID']) return res.status(403).send('You don\'t have permission to modify this URL!  <a href="/urls">Click here to go back.</a>');
 
   if (!longURL) return res.status(404).send('URL not found!');
 
