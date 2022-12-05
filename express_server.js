@@ -85,7 +85,9 @@ app.get('/register', (req, res) => {
   //if a user is already logged in, redirect to urls page
   if (req.cookies['user_id']) return res.redirect('/urls');
 
-  const templateVars = { user: users[req.cookies.user_id] };
+  const userID = users[req.cookies.user_id];
+
+  const templateVars = { user: userID };
   res.render('urls_register', templateVars);
 });
 
@@ -115,7 +117,9 @@ app.get('/login', (req, res) => {
   //if a user is already logged in, redirect to urls page
   if (req.cookies['user_id']) return res.redirect('/urls');
 
-  const templateVars = {user: users[req.cookies.user_id] };
+  const userID = users[req.cookies.user_id];
+
+  const templateVars = { user: userID };
   res.render('urls_login', templateVars);
 });
 
