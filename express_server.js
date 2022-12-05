@@ -154,15 +154,24 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', (req, res) => {
-  const randomKey = generateRandomString();
-
-  //return a 400 status code if email and/or password is empty
-  if (req.body.email === '' || req.body.password === '') return res.status(400).send('Email and/or password cannot be blank! <a href="/register">Click here to go back.</a>');
+  const userID = users[req.cookies.user_id];
+  const templateVars = { user: userID, prompt: '' };
   
-  const userID = getUserByEmail(req.body.email);
+  //return a 400 status code if email and/or password is empty
+  if (req.body.email === '' || req.body.password === '') {
+    templateVars.prompt = 'Email and/or password cannot be blank!';
+    return res.status(400).render('urls_register', templateVars);
+  }
 
-  // //return a 400 status code if email is already existing
-  if (userID && users[userID]['email'] === req.body.email) return res.status(400).send('Email already exist! Please <a href="/login">login</a> to continue.');
+  const uID = getUserByEmail(req.body.email);
+    
+  //return a 400 status code if email is already existing
+  if (uID && users[uID]['email'] === req.body.email) {
+    templateVars.prompt = 'Email already exist! Please login instead.';
+    return res.status(400).render('urls_register', templateVars);
+  }
+
+  const randomKey = generateRandomString();
 
   //add new user information to users object if there is no error
   users[randomKey] = {
