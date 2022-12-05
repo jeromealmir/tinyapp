@@ -42,6 +42,10 @@ const users = {
 app.get('/', (req, res) => {
   const userID = users[req.session.user_id];
   const templateVars = {user: userID, prompt: '' };
+
+  //if user is logged in, redirect to /urls page
+  if (req.session.user_id) return res.redirect('/urls');
+
   res.render('urls_login', templateVars);
 });
 
