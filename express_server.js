@@ -254,9 +254,10 @@ app.post('/login', (req, res) => {
   }
 
   //use bcrypt to check password match
-  //return 403 status code if password is incorrect
   if (!bcrypt.compareSync(req.body.password, users[uID]['password'])) {
     templateVars.prompt = 'Incorrect login! Please try again.';
+    
+    //return 403 status code if password is incorrect
     return res.status(403).render('urls_login', templateVars);
   }
 
