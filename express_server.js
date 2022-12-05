@@ -68,7 +68,7 @@ app.get('/urls/new', (req, res) => {
 app.get('/u/:id', (req, res) => {
   const longURL = urlDatabase[req.params.id];
 
-  if (!longURL) return res.status(404).send('URL not found!')
+  if (!longURL) return res.status(404).send('URL not found!');
 
   res.redirect(longURL);
 });
@@ -77,7 +77,7 @@ app.get('/urls/:id', (req, res) => {
   const longURL = urlDatabase[req.params.id];
   const userID = users[req.cookies.user_id];
 
-  if (!longURL) return res.status(404).send('URL not found!')
+  if (!longURL) return res.status(404).send('URL not found!');
 
   const templateVars = { id: req.params.id, longURL: longURL, user: userID };
   res.render('urls_show', templateVars);
@@ -98,7 +98,7 @@ app.post('/urls/:id', (req, res) => {
 
   const urlShortID = req.params.id;
 
-  //append http:// to URL if it was not included 
+  //append http:// to URL if it was not included
   if (!req.body.longURL.includes('http://')) {
     urlDatabase[urlShortID] = `http://${req.body.longURL}`;
   } else {
