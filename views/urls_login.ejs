@@ -17,6 +17,9 @@
   <%- include('partials/_header'); %>
 
   <form class="d-flex flex-column align-items-center m-3 p-3" action="/login" method="POST">
+    <div class="text-danger mb-1">
+      <small><%= prompt %></small>
+    </div>
     <div class="d-flex flex-column p-2 border rounded bg-light">
       <div class="d-flex justify-content-center pt-0 pb-2 px-2 border-bottom">Login</div>
       <div class="d-flex justify-content-between p-2">
