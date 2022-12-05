@@ -97,8 +97,15 @@ app.post('/urls/:id', (req, res) => {
   if (!req.cookies['user_id']) return res.status(403).send('Please login to use this service!');
 
   const urlShortID = req.params.id;
-  //add new URL to database
-  urlDatabase[urlShortID] = req.body.editLongURL;
+
+  //append http:// to URL if it was not included 
+  if (!req.body.longURL.includes('http://')) {
+    urlDatabase[urlShortID] = `http://${req.body.longURL}`;
+  } else {
+    //add new URL to database
+    urlDatabase[urlShortID] = req.body.longURL;
+  }
+
   res.redirect(`/urls`);
 });
 
