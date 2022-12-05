@@ -31,6 +31,11 @@
           </tr>
         </thead>
         <tbody>
+          <tr>
+            <% if (Object.keys(urls).length === 0) {%>
+            <td><small>Clean slate! Click <a href='/urls/new'>here</a> to create your first URL.</small></td>
+            <% } %>
+          </tr>
           <% for (let id in urls) { %>
             <tr>
               <td><a href="/u/<%= id %>"><%= id %></a></td>
