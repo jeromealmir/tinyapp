@@ -1,5 +1,6 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const bcrypt = require('bcryptjs');
 const app = express();
 const PORT = 8080; // default port 8080
 
@@ -24,12 +25,14 @@ const users = {
   aJ48lW: {
     id: "userRandomID",
     email: "user@example.com",
-    password: "purple-monkey-dinosaur",
+    //unhashed-password: purple-monkey-dinosaur
+    password: "$2a$10$JuABe1Q3OFNQqYlxgEzLfe7Z8CAvWaRqepr7TF6wyqMAbPcxHzuR6",
   },
   user2RandomID: {
     id: "user2RandomID",
     email: "user2@example.com",
-    password: "dishwasher-funk",
+    //unhashed-password: dishwasher-funk
+    password: "$2a$10$r44rANeJwt/PURCaYHDOhuBGh662XtGTwKyhYHQgfIZ6yjdUDyVXS",
   },
 };
 
@@ -214,7 +217,8 @@ app.post('/register', (req, res) => {
   users[randomKey] = {
     id: randomKey,
     email: req.body.email,
-    password: req.body.password
+    //hash password using bcrypt
+    password: bcrypt.hashSync(req.body.password, 10)
   };
 
   res.cookie('user_id', randomKey);
@@ -249,8 +253,9 @@ app.post('/login', (req, res) => {
     return res.status(403).render('urls_login', templateVars);
   }
 
+  //use bcrypt to check password match
   //return 403 status code if password is incorrect
-  if (users[uID]['password'] !== req.body.password) {
+  if (!bcrypt.compareSync(req.body.password, users[uID]['password'])) {
     templateVars.prompt = 'Incorrect login! Please try again.';
     return res.status(403).render('urls_login', templateVars);
   }
