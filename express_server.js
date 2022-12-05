@@ -91,7 +91,7 @@ app.get('/urls/:id', (req, res) => {
 
 app.post('/urls/:id/delete', (req, res) => {
   //if a user is not logged in, respond with a message back to client
-  if (!req.cookies['user_id']) return res.status(403).send('Please login to use this service!');
+  if (!req.cookies['user_id']) return res.status(403).send('Please login to modify this URL!');
   
   const urlShortID = req.params.id;
   delete urlDatabase[urlShortID];
@@ -100,7 +100,7 @@ app.post('/urls/:id/delete', (req, res) => {
 
 app.post('/urls/:id', (req, res) => {
   //if a user is not logged in, respond with a message back to client
-  if (!req.cookies['user_id']) return res.status(403).send('Please login to use this service!');
+  if (!req.cookies['user_id']) return res.status(403).send('Please login to modify this URL!');
 
   const urlShortID = req.params.id;
 
