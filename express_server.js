@@ -89,12 +89,13 @@ app.post('/register', (req, res) => {
   const randomKey = generateRandomString();
 
   //return a 400 status code if email and/or password is empty
-  if (req.body.email === '' || req.body.password === '') return res.sendStatus(400);
+  if (req.body.email === '' || req.body.password === '') return res.status(400).send('Email and/or password cannot be blank! <a href="/register">Click here to go back.</a>');
   
   const userID = getUserByEmail(req.body.email);
 
   // //return a 400 status code if email is already existing
-  if (userID && users[userID]['email'] === req.body.email) return res.sendStatus(400);
+  if (userID && users[userID]['email'] === req.body.email) return res.status(400).send('Email already exist! Please <a href="/login">login</a> to continue.');
+
   //add new user information to users object if there is no error
   users[randomKey] = {
     id: randomKey,
@@ -114,8 +115,14 @@ app.get('/login', (req, res) => {
 app.post('/login', (req, res) => {
   const userID = getUserByEmail(req.body.email);
 
-  //return 403 if email does not exist or email/password is incorrect
-  if (!userID || users[userID]['password'] !== req.body.password) return res.sendStatus(403);
+  //return a 400 status code if email and/or password is empty
+  if (req.body.email === '' || req.body.password === '') return res.status(400).send('Email and/or password cannot be blank! <a href="/login">Click here to go back.</a>');
+
+  //return 403 if email does not exist
+  if (!userID) return res.status(403).send('Email not found! Please <a href="/register">register</a> to continue.');
+
+  //return 403 if password is incorrect
+  if (users[userID]['password'] !== req.body.password) return res.status(403).send('Incorrect login! <a href="/login">Please try again.</a>');
 
   res.cookie('user_id', userID);
   res.redirect(`/urls`);
