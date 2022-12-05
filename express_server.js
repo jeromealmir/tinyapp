@@ -48,7 +48,9 @@ const urlsForUser = (id) => {
 };
 
 app.get('/', (req, res) => {
-  res.redirect('/urls');
+  const userID = users[req.cookies.user_id];
+  const templateVars = {user: userID, prompt: '' };
+  res.render('urls_login', templateVars);
 });
 
 app.get('/urls', (req, res) => {
