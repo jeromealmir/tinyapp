@@ -41,6 +41,9 @@ app.get('/urls', (req, res) => {
 });
 
 app.post('/urls', (req, res) => {
+  //if a user is not logged in, respond with a message back to client
+  if (!req.cookies['user_id']) return res.status(403).send('Please login to use this service!');
+
   const randomKey = generateRandomString();
 
   //append http:// to URL if it was not included
@@ -74,12 +77,18 @@ app.get('/urls/:id', (req, res) => {
 });
 
 app.post('/urls/:id/delete', (req, res) => {
+  //if a user is not logged in, respond with a message back to client
+  if (!req.cookies['user_id']) return res.status(403).send('Please login to use this service!');
+  
   const urlShortID = req.params.id;
   delete urlDatabase[urlShortID];
   res.redirect(`/urls`);
 });
 
 app.post('/urls/:id', (req, res) => {
+  //if a user is not logged in, respond with a message back to client
+  if (!req.cookies['user_id']) return res.status(403).send('Please login to use this service!');
+
   const urlShortID = req.params.id;
   //add new URL to database
   urlDatabase[urlShortID] = req.body.editLongURL;
