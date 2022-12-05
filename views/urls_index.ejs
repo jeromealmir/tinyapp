@@ -21,31 +21,38 @@
 
     <main style="margin: 1em;">
       <h3>My URLs</h3>
-      <table class="table">
+      <table class="table table-hover">
         <thead>
           <tr>
-            <th scope="col">Short URL ID</th>
-            <th scope="col">Long URL</th>
-            <th scope="col">Edit</th>
-            <th scope="col">Delete</th>
+            <th scope="col" style="vertical-align:middle">Short URL ID</th>
+            <th scope="col" style="vertical-align:middle">Long URL</th>
+            <th scope="col" style="vertical-align:middle">Edit</th>
+            <th scope="col" style="vertical-align:middle">Delete</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <% if (Object.keys(urls).length === 0) {%>
             <td><small>Clean slate! Click <a href='/urls/new'>here</a> to create your first URL.</small></td>
+            <td></td>
+            <td></td>
+            <td></td>
             <% } %>
           </tr>
           <% for (let id in urls) { %>
             <tr>
-              <td><a href="/u/<%= id %>"><%= id %></a></td>
-              <td><%= urls[id].longURL %></td>
-              <td><form method="GET" action="/urls/<%= id %>">
+              <td style="vertical-align:middle"><a href="/u/<%= id %>"><%= id %></a></td>
+              <td style="word-break:break-all; vertical-align:middle"><%= urls[id].longURL %></td>
+              <td>
+                <form method="GET" action="/urls/<%= id %>">
                 <button type="submit" class="btn btn-outline-primary">Edit</button>
-                </form></td>
-              <td><form method="POST" action="/urls/<%= id %>/delete">
+                </form>
+              </td>
+              <td>
+                <form method="POST" action="/urls/<%= id %>/delete">
                 <button type="submit" class="btn btn-outline-danger">Delete</button>
-                </form></td>
+                </form>
+              </td>
             </tr>
           <% } %>
         </tbody>
