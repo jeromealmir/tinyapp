@@ -1,4 +1,4 @@
-const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
 const bcrypt = require('bcryptjs');
 
 const express = require('express');
@@ -7,7 +7,10 @@ const PORT = 8080; // default port 8080
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1', 'key2']
+}));
 
 const urlDatabase = {
   'b2xVn2': {
@@ -53,18 +56,18 @@ const urlsForUser = (id) => {
 };
 
 app.get('/', (req, res) => {
-  const userID = users[req.cookies.user_id];
+  const userID = users[req.session.user_id];
   const templateVars = {user: userID, prompt: '' };
   res.render('urls_login', templateVars);
 });
 
 app.get('/urls', (req, res) => {
-  const urls = urlsForUser(req.cookies['user_id']);
-  const userID = users[req.cookies.user_id];
+  const urls = urlsForUser(req.session.user_id);
+  const userID = users[req.session.user_id];
   const templateVars = { urls: urls, user: userID, prompt: '' };
 
   //if user is not logged in, redirect to login page
-  if (!req.cookies['user_id']) {
+  if (!req.session.user_id) {
     templateVars.prompt = 'Please login to use this service!';
     return res.render('urls_login', templateVars);
   }
@@ -74,7 +77,7 @@ app.get('/urls', (req, res) => {
 
 app.post('/urls', (req, res) => {
   //if user is not logged in, respond with status code and error message
-  if (!req.cookies['user_id']) return res.status(403).send('Please login to use this service!');
+  if (!req.session.user_id) return res.status(403).send('Please login to use this service!');
 
   const randomKey = generateRandomString();
 
@@ -82,12 +85,12 @@ app.post('/urls', (req, res) => {
   if (!req.body.longURL.includes('http://')) {
     urlDatabase[randomKey] = {
       longURL: `http://${req.body.longURL}`,
-      userID: req.cookies['user_id']
+      userID: req.session.user_id
     };
   } else {
     urlDatabase[randomKey] = {
       longURL: req.body.longURL,
-      userID: req.cookies['user_id']
+      userID: req.session.user_id
     };
   }
 
@@ -95,11 +98,11 @@ app.post('/urls', (req, res) => {
 });
 
 app.get('/urls/new', (req, res) => {
-  const userID = users[req.cookies.user_id];
+  const userID = users[req.session.user_id];
   const templateVars = { user: userID, prompt: '' };
 
   //if user is not logged in, redirect to login page
-  if (!req.cookies['user_id']) {
+  if (!req.session.user_id) {
     templateVars.prompt = 'Please login to use this service!';
     return res.render('urls_login', templateVars);
   }
@@ -124,17 +127,17 @@ app.get('/urls/:id', (req, res) => {
   if (!urlDatabase[shortURL]) return res.status(404).send('URL not found!');
 
   const longURL = urlDatabase[shortURL]['longURL'];
-  const userID = users[req.cookies.user_id];
+  const userID = users[req.session.user_id];
   const templateVars = { id: shortURL, longURL: longURL, user: userID, prompt: '' };
 
   //if user is not logged in, redirect to login page
-  if (!req.cookies['user_id']) {
+  if (!req.session.user_id) {
     templateVars.prompt = 'Please login to modify this URL!';
     return res.render('urls_login', templateVars);
   }
 
   //if userid does not match URL's, redirect to login page
-  if (req.cookies['user_id'] !== urlDatabase[shortURL]['userID']) return res.status(403).send('You don\'t have permission to modify this URL!  <a href="/urls">Click here to go back.</a>');
+  if (req.session.user_id !== urlDatabase[shortURL]['userID']) return res.status(403).send('You don\'t have permission to modify this URL!  <a href="/urls">Click here to go back.</a>');
 
 
   res.render('urls_show', templateVars);
@@ -147,10 +150,10 @@ app.post('/urls/:id/delete', (req, res) => {
   if (!urlDatabase[shortURL]) return res.status(404).send('URL not found!');
 
   // //if a user is not logged in, respond with status code and error message
-  if (!req.cookies['user_id']) return res.status(401).send('Please login to modify this URL!');
+  if (!req.session.user_id) return res.status(401).send('Please login to modify this URL!');
   
   //if user do not own the URL, respond with status code and error message
-  if (req.cookies['user_id'] !== urlDatabase[shortURL]['userID']) return res.status(403).send('You don\'t have permission to modify this URL!');
+  if (req.session.user_id !== urlDatabase[shortURL]['userID']) return res.status(403).send('You don\'t have permission to modify this URL!');
 
   delete urlDatabase[shortURL];
   res.redirect(`/urls`);
@@ -163,22 +166,22 @@ app.post('/urls/:id', (req, res) => {
   if (!urlDatabase[shortURL]) return res.status(404).send('URL not found!');
 
   // //if user is not logged in, respond with status code and error message
-  if (!req.cookies['user_id']) return res.status(401).send('Please login to modify this URL!');
+  if (!req.session.user_id) return res.status(401).send('Please login to modify this URL!');
 
   //if user do not own the URL, respond with status code and error message
-  if (req.cookies['user_id'] !== urlDatabase[shortURL]['userID']) return res.status(403).send('You don\'t have permission to modify this URL!');
+  if (req.session.user_id !== urlDatabase[shortURL]['userID']) return res.status(403).send('You don\'t have permission to modify this URL!');
 
   //append http:// to URL if it was not included in the input
   if (!req.body.longURL.includes('http://')) {
     urlDatabase[shortURL] = {
       longURL: `http://${req.body.longURL}`,
-      userID: req.cookies['user_id']
+      userID: req.session.user_id
     };
   } else {
     //add new URL to database
     urlDatabase[shortURL] = {
       longURL: req.body.longURL,
-      userID: req.cookies['user_id']
+      userID: req.session.user_id
     };
   }
 
@@ -187,16 +190,16 @@ app.post('/urls/:id', (req, res) => {
 
 app.get('/register', (req, res) => {
   //if user is already logged in, redirect to urls page
-  if (req.cookies['user_id']) return res.redirect('/urls');
+  if (req.session.user_id) return res.redirect('/urls');
 
-  const userID = users[req.cookies.user_id];
+  const userID = users[req.session.user_id];
   const templateVars = { user: userID, prompt: '' };
 
   res.render('urls_register', templateVars);
 });
 
 app.post('/register', (req, res) => {
-  const userID = users[req.cookies.user_id];
+  const userID = users[req.session.user_id];
   const templateVars = { user: userID, prompt: '' };
   
   //return 400 status code if email and/or password is empty
@@ -223,22 +226,22 @@ app.post('/register', (req, res) => {
     password: bcrypt.hashSync(req.body.password, 10)
   };
 
-  res.cookie('user_id', randomKey);
+  req.session.user_id = randomKey;
   res.redirect(`/urls`);
 });
 
 app.get('/login', (req, res) => {
   //if user is already logged in, redirect to urls page
-  if (req.cookies['user_id']) return res.redirect('/urls');
+  if (req.session.user_id) return res.redirect('/urls');
 
-  const userID = users[req.cookies.user_id];
+  const userID = users[req.session.user_id];
   const templateVars = { user: userID, prompt: '' };
 
   res.render('urls_login', templateVars);
 });
 
 app.post('/login', (req, res) => {
-  const userID = users[req.cookies.user_id];
+  const userID = users[req.session.user_id];
   const templateVars = { urls: urlDatabase, user: userID, prompt: '' };
   
   //return 400 status code if email and/or password is empty
@@ -263,12 +266,12 @@ app.post('/login', (req, res) => {
     return res.status(403).render('urls_login', templateVars);
   }
 
-  res.cookie('user_id', uID);
+  req.session.user_id = uID;
   res.redirect(`/urls`);
 });
 
 app.post('/logout', (req, res) => {
-  res.clearCookie('user_id');
+  req.session = null;
   res.redirect(`/login`);
 });
 
