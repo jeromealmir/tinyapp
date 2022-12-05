@@ -26,7 +26,7 @@
         <h4>Edit</h4>
         <form class="form-inline justify-content-center" action="/urls/<%= id %>" method="POST">
           <label class="col-sm-1 col-form-label" for="longURL">New URL: </label>
-          <input type="text" class="form-control mb-2 mr-sm-2" id="longURL" name="longURL" placeholder="Enter new URL" size="<%= longURL.length - 3%>" value="<%= longURL %>">
+          <input type="text" class="form-control mb-2 mr-sm-2" id="longURL" name="longURL" placeholder="Enter new URL" size="<%= longURL.length%>" value="<%= longURL %>">
           <button type="submit" class="btn btn-primary mb-2">Submit</button>
         </form>
       </div>
