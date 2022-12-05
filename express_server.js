@@ -10,8 +10,14 @@ app.use(cookieParser());
 const generateRandomString = () => Math.random().toString(36).slice(7);
 
 const urlDatabase = {
-  'b2xVn2': 'http://www.lighthouselabs.ca',
-  '9sm5xK': 'http://www.google.com'
+  'b2xVn2': {
+    longURL: 'http://www.lighthouselabs.ca',
+    userID: 'aJ48lW'
+  },
+  '9sm5xK': {
+    longURL: 'http://www.google.com',
+    userID: 'aJ48lW'
+  }
 };
 
 const users = {
@@ -59,7 +65,7 @@ app.post('/urls', (req, res) => {
 app.get('/urls/new', (req, res) => {
   //if a user is not logged in, redirect to login page
   if (!req.cookies['user_id']) return res.redirect('/login');
-  
+
   const userID = users[req.cookies.user_id];
   const templateVars = { user: userID };
   res.render('urls_new', templateVars);
