@@ -28,12 +28,20 @@
           Short URL ID: <a href="/u/<%= id %>"><%= id %></a>
         </p>
       </div>
-      <div class="card-footer text-muted">
+      <div class="d-flex flex-column align-items-center card-footer text-muted">
+        <div class="d-flex">
         <h4>Edit</h4>
-        <form class="form-inline justify-content-center" action="/urls/<%= id %>" method="POST">
-          <label class="col-sm-1 col-form-label" for="longURL">New URL: </label>
-          <input type="text" class="form-control mb-2 mr-sm-2" id="longURL" name="longURL" placeholder="Enter new URL" size="<%= longURL.length%>" value="<%= longURL %>">
-          <button type="submit" class="btn btn-primary mb-2">Submit</button>
+        </div>
+        <form class="d-flex" action="/urls/<%= id %>" method="POST">
+          <div class="d-flex align-items-center p-1">
+            <label for="longURL">New URL: </label>
+          </div>
+          <div class="d-flex align-items-center p-1">
+            <input type="text" class="form-control mb-2 mr-sm-2" id="longURL" name="longURL" placeholder="Enter new URL" size="<%= longURL.length%>" value="<%= longURL %>">
+          </div>
+          <div class="d-flex align-items-center p-1">
+            <button type="submit" class="btn btn-primary mb-2">Submit</button>
+          </div>
         </form>
       </div>
     </div>
