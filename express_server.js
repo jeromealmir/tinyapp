@@ -102,15 +102,18 @@ app.get('/urls/new', (req, res) => {
 
 app.get('/u/:id', (req, res) => {
   const shortURL = req.params.id;
+  if (!urlDatabase[shortURL]) return res.status(404).send('URL not found!');
+
   const longURL = urlDatabase[shortURL]['longURL'];
-
-  if (!longURL) return res.status(404).send('URL not found!');
-
   res.redirect(longURL);
 });
 
 app.get('/urls/:id', (req, res) => {
   const shortURL = req.params.id;
+
+  //if url id is not in database, respond with status code and error message
+  if (!urlDatabase[shortURL]) return res.status(404).send('URL not found!');
+
   const longURL = urlDatabase[shortURL]['longURL'];
   const userID = users[req.cookies.user_id];
   const templateVars = { id: shortURL, longURL: longURL, user: userID, prompt: '' };
