@@ -21,7 +21,7 @@ const urlDatabase = {
 };
 
 const users = {
-  userRandomID: {
+  aJ48lW: {
     id: "userRandomID",
     email: "user@example.com",
     password: "purple-monkey-dinosaur",
@@ -35,6 +35,17 @@ const users = {
 
 //lookup users object and return true if email is already existing
 const getUserByEmail = (email) => Object.keys(users).find(user => users[user]['email'] === email);
+
+//lookup URLs by userID
+const urlsForUser = (id) => {
+  const urlsObj = {};
+  Object.keys(urlDatabase).filter(x => {
+    if (urlDatabase[x]['userID'] === id) {
+      urlsObj[x] = {longURL: urlDatabase[x].longURL};
+    }
+  });
+  return urlsObj;
+};
 
 app.get('/', (req, res) => {
   res.redirect('/urls');
