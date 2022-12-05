@@ -42,7 +42,11 @@ app.get('/', (req, res) => {
 
 app.get('/urls', (req, res) => {
   const userID = users[req.cookies.user_id];
-  const templateVars = { urls: urlDatabase, user: userID };
+  const templateVars = { urls: urlDatabase, user: userID, prompt: 'Please login to use this service!' };
+
+  //if a user is not logged in, redirect to login page
+  if (!req.cookies['user_id']) return res.render('urls_login', templateVars);
+  
   res.render('urls_index', templateVars);
 });
 
