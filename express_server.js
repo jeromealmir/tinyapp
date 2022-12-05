@@ -130,35 +130,34 @@ app.get('/urls/:id', (req, res) => {
 });
 
 app.post('/urls/:id/delete', (req, res) => {
+  const shortURL = req.params.id;
 
   //if url id is not in database, respond with status code and error message
-  if (!urlDatabase[req.params.id]) return res.status(404).send('URL not found!');
+  if (!urlDatabase[shortURL]) return res.status(404).send('URL not found!');
 
   // //if a user is not logged in, respond with status code and error message
   if (!req.cookies['user_id']) return res.status(401).send('Please login to modify this URL!');
   
   //if user do not own the URL, respond with status code and error message
-  if (req.cookies['user_id'] !== urlDatabase[req.params.id]['userID']) return res.status(403).send('You don\'t have permission to modify this URL!'); 
+  if (req.cookies['user_id'] !== urlDatabase[shortURL]['userID']) return res.status(403).send('You don\'t have permission to modify this URL!'); 
 
-  const shortURL = req.params.id;
   delete urlDatabase[shortURL];
   res.redirect(`/urls`);
 });
 
 app.post('/urls/:id', (req, res) => {
+  const shortURL = req.params.id;
 
   //if url id is not in database, respond with status code and error message
-  if (!urlDatabase[req.params.id]) return res.status(404).send('URL not found!');
+  if (!urlDatabase[shortURL]) return res.status(404).send('URL not found!');
 
   // //if user is not logged in, respond with status code and error message
   if (!req.cookies['user_id']) return res.status(401).send('Please login to modify this URL!');
 
   //if user do not own the URL, respond with status code and error message
-  if (req.cookies['user_id'] !== urlDatabase[req.params.id]['userID']) return res.status(403).send('You don\'t have permission to modify this URL!'); 
+  if (req.cookies['user_id'] !== urlDatabase[shortURL]['userID']) return res.status(403).send('You don\'t have permission to modify this URL!'); 
 
-  const shortURL = req.params.id;
-
-  //append http:// to URL if it was not included
+  //append http:// to URL if it was not included in the input
   if (!req.body.longURL.includes('http://')) {
     urlDatabase[shortURL] = {
       longURL: `http://${req.body.longURL}`,
