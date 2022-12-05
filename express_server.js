@@ -64,7 +64,12 @@ app.get('/u/:id', (req, res) => {
 });
 
 app.get('/urls/:id', (req, res) => {
-  const templateVars = { id: req.params.id, longURL: urlDatabase[req.params.id], user: users[req.cookies.user_id]};
+  const longURL = urlDatabase[req.params.id];
+  const userID = users[req.cookies.user_id];
+
+  if (!longURL) return res.status(404).send('URL not found!')
+
+  const templateVars = { id: req.params.id, longURL: longURL, user: userID };
   res.render('urls_show', templateVars);
 });
 
