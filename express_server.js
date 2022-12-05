@@ -209,7 +209,7 @@ app.post('/login', (req, res) => {
     return res.status(403).render('urls_login', templateVars);
   }
 
-  res.cookie('user_id', userID);
+  res.cookie('user_id', uID);
   res.redirect(`/urls`);
 });
 
