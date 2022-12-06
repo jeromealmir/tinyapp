@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  
     <!-- Bootstrap CSS -->
     <link
     rel="stylesheet"
@@ -13,12 +12,11 @@
   />
   <title>TinyApp - Login</title>
 </head>
-
 <body>
   <%- include('partials/_header'); %>
-
   <form class="d-flex flex-column align-items-center m-3 p-3" action="/login" method="POST">
     <div class="text-danger mb-1">
+      <!-- placeholder for error messages on top of login form -->
       <small><%= prompt %></small>
     </div>
     <div class="d-flex flex-column p-2 border rounded bg-light">
@@ -43,7 +41,6 @@
       <small>Don't have an account yet? Click <a href='/register'>here</a> to register.</small>
     </div>
   </form>
-
   <!-- Bootstrap JS -->
   <script
   src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

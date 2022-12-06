@@ -18,11 +18,13 @@
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
       </div>
     </div>
+    <!-- display user email in header when logged in -->
     <% if (user) { %>
       <form class="form-inline" action="/logout" method="POST">
         <label class="mr-sm-2 text-black-50 mb-0 m-1">Logged in as: <%= user.email %></label>
         <button type="submit" class="btn btn-primary m-1">Logout</button>
       </form>
+    <!-- display login and register links if no user logged in -->
     <% } else { %>
       <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
         <div class="navbar-nav">
