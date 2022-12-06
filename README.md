@@ -51,8 +51,8 @@ This project was created and published by [Jerome Lagbas](https://github.com/jer
 
 ## Getting Started
 
-- Install all dependencies (using the `npm install` command).
-- Run the development web server using the `node express_server.js` command.
+- Install all dependencies (using the `npm install` command)
+- Run the development web server using the `node express_server.js` command
 
 ## How To Use
 
@@ -65,14 +65,14 @@ This project was created and published by [Jerome Lagbas](https://github.com/jer
 - Use your shortened URL by going to `localhost:8080/u/` + `short URL ID`
 - Modify URL by clicking `Edit`
 - Delete URL by clicking `Delete`
-- Access or share your TinyURL URL anywhere
+- Access or share your TinyURL anywhere
 
 ## Features
 
 - Simple user database (supports unlimited user registration and URL creation)
 - Secured user registration using hash technology (powered by bcrypt)
 - Supports user-session using cookies (login and logout)
-- Encrypted cookies session (powered by cookie-session)
+- Encrypted cookies (powered by cookie-session)
 - User authenticated URLs (protects unauthorized modification and deletion)
 - Protected POST routes
 - Responsive web design (mobile view supported)
