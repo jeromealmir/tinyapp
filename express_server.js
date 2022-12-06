@@ -102,7 +102,7 @@ app.get('/u/:id', (req, res) => {
   const shortURL = req.params.id;
 
   //if url id is not in database, respond with status code and error message
-  if (!urlDatabase[shortURL]) return res.status(404).send('URL not found!');
+  if (!urlDatabase[shortURL]) return res.status(404).render('urls_404');
 
   const longURL = urlDatabase[shortURL]['longURL'];
   res.redirect(longURL);
@@ -112,7 +112,7 @@ app.get('/urls/:id', (req, res) => {
   const shortURL = req.params.id;
 
   //if url id is not in database, respond with status code and error message
-  if (!urlDatabase[shortURL]) return res.status(404).send('URL not found!');
+  if (!urlDatabase[shortURL]) return res.status(404).render('urls_404');
 
   const longURL = urlDatabase[shortURL]['longURL'];
   const userID = users[req.session.user_id];
@@ -125,7 +125,7 @@ app.get('/urls/:id', (req, res) => {
   }
 
   //if userid does not match URL's, redirect to login page
-  if (req.session.user_id !== urlDatabase[shortURL]['userID']) return res.status(403).send('You don\'t have permission to modify this URL!  <a href="/urls">Click here to go back.</a>');
+  if (req.session.user_id !== urlDatabase[shortURL]['userID']) return res.status(403).render('urls_403');
 
 
   res.render('urls_show', templateVars);
