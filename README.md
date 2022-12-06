@@ -10,35 +10,35 @@ This project was created and published by [Jerome Lagbas](https://github.com/jer
 
 | ![url-login.png](./docs/url-login.png) | 
 |:--:| 
-| *Login Page* |
+| Login Page |
 
 | ![url-register.png](./docs/url-register.png) | 
 |:--:| 
-| *Register Page* |
+| Register Page |
 
 | ![url-main-empty.png](./docs/url-main-empty.png) | 
 |:--:| 
-| *TinyApp Homepage (Empty)* |
+| TinyApp Homepage (Empty) |
 
 | ![url-main.png](./docs/url-main.png) | 
 |:--:| 
-| *TinyApp Homepage* |
+| TinyApp Homepage |
 
 | ![url-new.png](./docs/url-new.png) | 
 |:--:| 
-| *Create New URL* |
+| Create New URL |
 
 | ![url-edit.png](./docs/url-edit.png) | 
 |:--:| 
-| *Edit URL* |
+| Edit URL |
 
 | ![url-403.png](./docs/url-403.png) | 
 |:--:| 
-| *403 Forbidden Page* |
+| 403 Forbidden Page |
 
 | ![url-404.png](./docs/url-404.png) | 
 |:--:| 
-| *404 Not Found Page* |
+| 404 Not Found Page |
 
 
 ## Dependencies
