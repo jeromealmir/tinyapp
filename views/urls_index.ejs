@@ -6,7 +6,6 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-
     <!-- Bootstrap CSS -->
     <link
       rel="stylesheet"
@@ -14,20 +13,25 @@
       integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
       crossorigin="anonymous"
     />
-    <title>TinyApp - Home</title>
+    <!-- Override Bootstrap CSS -->
+    <style>
+      .table th, .table td {
+        vertical-align: middle !important;
+      }
+      </style>
+      <title>TinyApp - Home</title>
   </head>
   <body>
     <%- include('partials/_header'); %>
-
     <main style="margin: 1em;">
       <h3>My URLs</h3>
       <table class="table table-hover table-responsive-sm">
         <thead>
           <tr>
-            <th scope="col" style="vertical-align:middle">Short URL ID</th>
-            <th scope="col" style="vertical-align:middle">Long URL</th>
-            <th scope="col" style="vertical-align:middle">Edit</th>
-            <th scope="col" style="vertical-align:middle">Delete</th>
+            <th scope="col">Short URL ID</th>
+            <th scope="col">Long URL</th>
+            <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
           </tr>
         </thead>
         <tbody>
@@ -41,8 +45,8 @@
           </tr>
           <% for (let id in urls) { %>
             <tr>
-              <td style="vertical-align:middle"><a href="/u/<%= id %>"><%= id %></a></td>
-              <td style="word-break:break-all; vertical-align:middle"><%= urls[id].longURL %></td>
+              <td><a href="/u/<%= id %>"><%= id %></a></td>
+              <td style="word-break:break-all;"><%= urls[id].longURL %></td>
               <td>
                 <form method="GET" action="/urls/<%= id %>">
                 <button type="submit" class="btn btn-outline-primary">Edit</button>
